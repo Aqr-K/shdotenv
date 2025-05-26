@@ -25,7 +25,7 @@ shdotenv 可以安全地加载与 POSIX shell 语法兼容的 .env 文件。脚�
 1.  提供语言无关的 CLI 工具
 2.  提供一个可以从 shell 脚本安全加载 .env 文件的库
 3.  定义 POSIX shell 兼容的 .env 文件语法规范
-4.  支持 .env 文件语法方言以实现互操作性
+4.  支持 .env 文件语法编程语言以实现互操作性
 
 ## 要求
 
@@ -81,43 +81,44 @@ $ make install PREFIX=$HOME
 ## 用法
 
 ```
-用法: shdotenv [选项]... [--] [[命令 | export] [参数]...]
+Usage: shdotenv [OPTION]... [--] [[COMMAND | export] [ARG]...]
 
-  如果指定了 命令，它将加载 .env 文件并运行该命令。
-  如果省略 命令，它将输出解释 .env 文件的结果。
-  这可以安全地加载到 shell 中（例如，使用 eval）。
+  If the COMMAND is specified, it will load .env files and run the command.
+  If the COMMAND is omitted, it will output the result of interpreting .env
+  files. It can be safely loaded into the shell (For example, using eval).
 
-选项:
-  -d, --dialect 方言      指定 .env 方言 [默认: posix]
+Options:
+  -d, --dialect DIALECT     Specify the .env dialect [default: posix]
                                 posix, ruby, node, python,
                                 php, go, rust, docker
-  -f, --format 格式       以指定格式输出 [默认: sh]
+  -f, --format FORMAT       Output in the specified format [default: sh]
                                 sh, csh, fish, json, jsonl, yaml
-  -e, --env ENV_PATH      .env 文件的位置 [默认: .env]
-                              允许多个 -e 选项
-                              如果 ENV_PATH 是 "-", 则从标准输入读取
-  -i, --ignore-environment  忽略当前环境变量
-      --overload            覆盖预定义的变量
-      --no-allexport        禁用所有变量导出
-      --no-nounset          允许引用未定义的变量
-      --grep 模式           仅输出与正则表达式模式匹配的名称
-  -s, --sort                对变量名进行排序
-  -q, --quiet               禁止所有输出（用于测试 .env 文件）
-      --version             显示版本并退出
-      --help                显示此帮助信息并退出
+  -e, --env ENV_PATH        Location of the .env file [default: .env]
+                              Multiple -e options are allowed
+                              If the ENV_PATH is "-", read from stdin
+  -i, --ignore-environment  Ignore the current environment variables
+      --overload            Overload predefined variables
+      --no-allexport        Disable all variable export
+      --no-nounset          Allow references to undefined variables
+      --grep PATTERN        Output only names that match the regexp pattern
+  -s, --sort                Sort variable names
+  -q, --quiet               Suppress all output (useful for test .env files)
+      --version             Show the version and exit
+      --help                Show this message and exit
 
-用法: shdotenv [选项]... export [-0ps] [-n | -v] [--] [名称]...
-  导出环境变量。默认输出为 POSIX 兼容的 .env 格式。
+Usage: shdotenv [OPTION]... export [-0ps] [-n | -v] [--] [NAME]...
+  Exports environment variables. Default output is POSIX-compliant .env format.
 
-  -0  每行输出以 NUL 结尾，而非换行符
-  -p  在环境变量名前附加 "export" 前缀
-  -s  如果名称缺失，则输出空字符串而非错误
-  -n  仅列出环境变量名称
-  -v  仅列出环境变量值
+  -0  end each output line with NUL, not newline
+  -p  Append "export" prefix to environment variable names
+  -s  Empty string instead of error if name is missing
+  -n  List environment variable names only
+  -v  List environment variable values only
 
-  这将在加载 .env 文件后输出。如果您不想加载它，请指定 "-e /dev/null"。
-  这类似于 "export"、"env" 和 "printenv" 命令，但会正确引用，
-  并且只导出对 posix shell 有效的便携式环境变量名称。
+  This will be output after the .env files is loaded. If you do not want
+  to load it, specify "-e /dev/null". This is similar to "export", "env"
+  and "printenv" commands, but quoting correctly and exports only portable
+  environment variable name that are valid as identifier for posix shell.
 ```
 
 ## 如何使用
@@ -210,7 +211,7 @@ export EXPORT2 # 等同于：export EXPORT2="${EXPORT2:-}"
 ```
 
 -   语法是 POSIX shell 的一个子集
--   第一行是可选的指示指令，用于指定 .env 语法的方言
+-   第一行是可选的指示指令，用于指定 .env 语法的编程语言
 -   分隔名称和值的 `=` 前后不允许有空格
 -   不支持 ANSI-C 风格的转义（即 `\n` 不是换行符）
 -   **无引号值**
@@ -231,10 +232,10 @@ export EXPORT2 # 等同于：export EXPORT2="${EXPORT2:-}"
 
 ### 指示指令
 
-指定此 `.env` 文件使用的 dotenv 语法方言。
+指定此 `.env` 文件使用的 dotenv 语法编程语言。
 
 ```sh
-# dotenv <方言>
+# dotenv <编程语言>
 ```
 
 示例：
@@ -243,9 +244,9 @@ export EXPORT2 # 等同于：export EXPORT2="${EXPORT2:-}"
 # dotenv ruby
 ```
 
-### 支持的方言
+### 支持的编程语言
 
-本项目的正式 `.env` 语法仅为 `posix`。`posix` 是 POSIX shell 的一个子集，并与 shell 脚本兼容。支持其他 .env 语法方言是为了互操作性。兼容性将逐步提高，但并非完全兼容。欢迎报告问题。
+本项目的正式 `.env` 语法仅为 `posix`。`posix` 是 POSIX shell 的一个子集，并与 shell 脚本兼容。支持其他 .env 语法编程语言是为了互操作性。兼容性将逐步提高，但并非完全兼容。欢迎报告问题。
 
 -   docker: [docker](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file)
 -   ruby: [dotenv](https://github.com/bkeepers/dotenv)
@@ -255,14 +256,14 @@ export EXPORT2 # 等同于：export EXPORT2="${EXPORT2:-}"
 -   go: [godotenv](https://github.com/joho/godotenv)
 -   rust: [dotenv](https://github.com/dotenv-rs/dotenv)
 
-[比较方言](docs/dialects.md)
+[比较编程语言](docs/dialects.md)
 
 ## .shdotenv
 
-指定 shdotenv 的选项。目前仅支持 `dialect`。建议使用 `dotenv` 指示指令指定 dotenv 方言。`.shdotenv` 设置适用于不允许修改项目文件但个人需要指定方言的情况。
+指定 shdotenv 的选项。目前仅支持 `dialect`。建议使用 `dotenv` 指示指令指定 dotenv 编程语言。`.shdotenv` 设置适用于不允许修改项目文件但个人需要指定编程语言的情况。
 
 ```
-dialect: <方言>
+dialect: <编程语言>
 ```
 
 示例：
