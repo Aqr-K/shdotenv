@@ -45,7 +45,7 @@ function expand_env(key) {
   abort(sprintf("%s: the key is not set", key))
 }
 
-function parse_key(key) {
+function se_key(key) {
   if (dialect("ruby|node|python|php|go")) {
     key = trim(key)
   }
@@ -58,7 +58,7 @@ function parse_key(key) {
   return key
 }
 
-function parse_key_only(str) {
+function se_key_only(str) {
   if (!sub("^export[ \t]+", "", str)) {
     syntax_error("not a variable definition")
   }
@@ -69,7 +69,7 @@ function parse_key_only(str) {
   return str
 }
 
-function parse_raw_value(str) {
+function se_raw_value(str) {
   return str
 }
 
@@ -94,8 +94,14 @@ function parse_unquoted_value(str) {
 }
 
 function parse_single_quoted_value(str) {
-  if (index(str, "'")) {
-    syntax_error("using single quote not allowed in the single quoted value")
+  if (dialect("python")) {
+    gsub(/\\\'/, "'", str)
+  } else if (dialect("ruby|node|php|go")) {
+    :
+  } else {
+    if (index(str, "'")) {
+      syntax_error("using single quote not allowed in the single quoted value")
+    }
   }
   return str
 }
