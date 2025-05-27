@@ -1,3 +1,5 @@
+[简体中文](dialects.md) | [English](dialects.en-US.md)
+
 # .env syntax dialects
 
 | name   | SAK | EP  | EO  | UQV | SQV | DQV | BE  | ML  | CL  | VE  | DV  | CS  | CMT |
@@ -11,66 +13,66 @@
 | go     | 1   | 0   | 4   | 2   | 1   | 1   | 1   | -   | -   | 5   | 0   | 0   | 1   |
 | rust   | 1   | 0   | -   | 4   | 0   | 4   | 5   | -   | -   | 1   | 0   | 0   | 0   |
 
-The `posix` is a subset of the POSIX shell syntax.
+`posix` 是 posix shell 语法的子集。
 
-- SAK: Spaces around the key
-  - 0: Remove spaces before the key, spaces after the key are not allowed
-  - 1: Remove spaces before and after the key
-- EP: Export prefix
-  - 0: Allowed
-  - -: Not allowed
-- EO: Export only
-  - 0: Allowed
-  - 1: Allowed, but must be set to a value
-  - 2: Allowed, but treated as None
-  - 3: Allowed, but treated as unset?
-  - -: Not allowed
-- UQV: Unquoted value (Variable expansion is performed)
-  - 0: Spaces and Metacharacters are not allowed
-  - 1: Leave spaces as it is (Single and double quote values are not supported)
-  - 2: Remove spaces around it
-  - 3: Remove spaces around it, but leave comments as is
-  - 4: Remove spaces around it, and no spaces allowed
-- SQV: Single quoted value
-  - 0: Single quotes cannot be used in it
-  - 1: Single quotes can be used in it
-  - 2: Single quotes can be used in it, but need to be escaped
-- DQV: Double quoted value
-  - 0: Need to escape when used within it: \" \` \\ \$
-  - 1: Need to escape when used within it: \\
-  - 2: Need to escape when used within it: \$
-  - 3: Need to escape when used within it: \"
-  - 4: Need to escape when used within it: \" \\ \$
-- BE: Backslash escape (Double quoted value only)
-  - 0: None
-  - 1: `\n`, `\r` (Backslashes of other characters will disappear)
-  - 2: `\n` (Backslashes of other characters will remain)
-  - 3: `\a`,`\b`, `\f`, `\n`, `\r`, `\t`, `\v` (Backslashes of other characters will remain)
-  - 4: `\f`, `\n`, `\r`, `\t`, `\v` (Backslashes of other characters will cause an error)
-  - 5: `\n` (Backslashes of other characters will cause an error)
-- ML: Multiline within quotes
-  - 0: Allowed (single and double quotes)
-  - 1: Allowed (double quotes only)
-  - -: Not allowed
-- CL: Continuation line with backslash
-  - 0: Double quoted value only
-  - -: Not allowed
-- VE: Variable expansion
-  - 0: Brace only (`${VAR}`), double quotes
-  - 1: Brace and bare (`${VAR}`, `$VAR`), single and double quotes
-  - 2: Brace and bare (`${VAR}`, `$VAR`), unquotes and single and double quotes
-  - 3: Brace only (`${VAR}`), unquotes and single and double quotes
-  - 4: Brace only (`${VAR}`), unquotes and double quotes
-  - 5: Brace and bare (`${VAR}`, `$VAR`), unquotes and double quotes
-  - -: Not allowed
-- DV: Default value (`${VAR-default}`, `${VAR:-default}`)
-  - 0: Not allowed
-  - 1: Allowed (`${VAR:-default}` only)
-- CS: Command Substitution
-  - 0: Not allowed
-  - 1: Allowed
-- CMT: Comments at end of line
-  - 0: Allowed and requires spaces before `#`
-  - 1: Allowed and no requires spaces before `#`
-  - 2: Allowed and no requires spaces before `#` except unquoted value
-  - -: Not allowed
+- SAK： key 周围的空格
+  - 0：移除键前的空格，键后的空格不允许存在
+  - 1：移除键前后所有的空格
+- EP：导出前缀
+  - 0：允许
+  - -：不允许
+- EO：仅导出
+  - 0：允许
+  - 1：允许，但必须设置为某个值
+  - 2：允许，但被视为无
+  - 3：允许，但被视为不设置？
+  - -：不允许
+- UQV：未引用的值（执行可变扩展）
+  - 0：不允许空格和元字符
+  - 1：离开空格（不支持单个和双引号值）
+  - 2：移除周围的空格
+  - 3：删除周围的空格，但请发表评论
+  - 4：移除周围的空格，不允许空格
+- SQV：单引号值
+  - 0：不能使用单引号
+  - 1：可以使用单引号
+  - 2：可以使用单引号，但需要转义
+- DQV：双引号的价值
+  - 0：在其中使用时需要转义：\" \` \\ \$
+  - 1：在其中使用时需要转义：\\
+  - 2：在其中使用时需要转义：\$
+  - 3：在其中使用时需要转义：\"
+  - 4：在其中使用时需要转义：\" \\ \$
+- BE：Backslash Escape（仅引用双引号）
+  - 0：无
+  - 1：`\n`，`\r`（其他字符的反斜杠将消失）
+  - 2：`\n`（其他字符的反斜杠将保持不变）
+  - 3：`\a`，`\b`，`\f`，`\n`，`\r`，`\t`，`\t`，`\v`（其他字符的反斜杠将保留）
+  - 4：`\f`，`\n`，`\r`，`\t`，`\v`（其他字符的反斜杠会导致错误）
+  - 5：`\n`（其他字符的反斜杠会导致错误）
+- ML：多行引号内支持
+  - 0：允许（单引号和双引号）
+  - 1：允许（仅双引号）
+  - -：不允许
+- CL：续行符使用反斜杠 \
+  - 0：双引号值
+  - -：不允许
+- VE：变量展开
+  - 0：仅花括号（`${var}`），双引号
+  - 1：花括号和裸引用（`${var}`，`$var`），单引号和双引号
+  - 2：花括号和裸引用（`${var}`，`$var`），去引号和单引号和双引号
+  - 3：仅花括号（`${var}`），去引号和单引号和双引号
+  - 4：仅花括号（`${var}`），不转义和双引号
+  - 5：括号和裸引用（`${var}`，`$var`），不转义和双引号
+  - -：不允许
+- dv：默认值（`${var-default}`，`${var：-default}`）
+  - 0：不允许
+  - 1：允许（仅限`${var：-default}`）
+- CS：命令替代
+  - 0：不允许
+  - 1：允许
+- CMT：在线结尾的评论
+  - 0：允许且需要在 `#` 前面留空格
+  - 1：允许且不需要在 `#` 前面留空格
+  - 2：允许且不需要在 `#` 前面添加空格，除非值未被引号包围
+  - -：不允许

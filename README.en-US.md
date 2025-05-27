@@ -1,4 +1,4 @@
- [中文](README.md) | [English](README.en-US.md)
+[简体中文](README.md) | [English](README.en-US.md)
 
 # shdotenv
 
@@ -274,10 +274,10 @@ dialect: ruby
 
 ## Environment Variables
 
-| name               | description                             | default |
-| ------------------ | --------------------------------------- | ------- |
-| SHDOTENV_FORMAT    | Output format (`sh`, `fish`, etc.)      | `sh`    |
-| SHDOTENV_AWK       | Path of the `awk` command               | `awk`   |
+| name            | description                        | default |
+| --------------- | ---------------------------------- | ------- |
+| SHDOTENV_FORMAT | Output format (`sh`, `fish`, etc.) | `sh`    |
+| SHDOTENV_AWK    | Path of the `awk` command          | `awk`   |
 
 ## FAQ
 
