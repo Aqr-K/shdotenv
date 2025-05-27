@@ -4,7 +4,7 @@
 
 为 shell 设计的 dotenv 工具，支持 POSIX 兼容及多种 .env 文件语法
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/ko1nksm/shdotenv/ubuntu.yml?branch=main&logo=github)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Aqr-K/shdotenv/ubuntu.yml?branch=main&logo=github)
 
 **项目状态**：基本完成。主要功能已实现，v1.0.0 版本将在近期发布。
 
@@ -31,16 +31,16 @@ shdotenv 可以安全地加载与 POSIX shell 语法兼容的 .env 文件。脚�
 
 `shdotenv` 是一个嵌入了 awk 脚本的单文件 shell 脚本。它只使用以下随处可见的命令：
 
--   POSIX shell (dash, bash, ksh, zsh 等)
--   awk (gawk, nawk, mawk, busybox awk)
+- POSIX shell (dash, bash, ksh, zsh 等)
+- awk (gawk, nawk, mawk, busybox awk)
 
 ## 安装
 
-从 [releases](https://github.com/ko1nksm/shdotenv/releases) 下载 `shdotenv` (shell 脚本)。
+从 [releases](https://github.com/Aqr-K/shdotenv/releases) 下载 `shdotenv` (shell 脚本)。
 
 ```console
 $ mkdir -p "$HOME/bin"
-$ wget https://github.com/ko1nksm/shdotenv/releases/latest/download/shdotenv -O "$HOME/bin/shdotenv"
+$ wget https://github.com/Aqr-K/shdotenv/releases/latest/download/shdotenv -O "$HOME/bin/shdotenv"
 $ chmod +x "$HOME/bin/shdotenv"
 ```
 
@@ -48,7 +48,7 @@ $ chmod +x "$HOME/bin/shdotenv"
 
 ```console
 $ mkdir -p "$HOME/.local/bin"
-$ wget https://github.com/ko1nksm/shdotenv/releases/latest/download/shdotenv -O "$HOME/.local/bin/shdotenv"
+$ wget https://github.com/Aqr-K/shdotenv/releases/latest/download/shdotenv -O "$HOME/.local/bin/shdotenv"
 $ chmod +x "$HOME/.local/bin/shdotenv"
 ```
 
@@ -59,7 +59,7 @@ $ chmod +x "$HOME/.local/bin/shdotenv"
 **仅构建和安装**
 
 ```console
-$ git clone https://github.com/ko1nksm/shdotenv.git
+$ git clone https://github.com/Aqr-K/shdotenv.git
 $ cd shdotenv
 $ make
 $ make install PREFIX=$HOME
@@ -70,7 +70,7 @@ $ make install PREFIX=$HOME
 完整构建需要 [shfmt](https://github.com/mvdan/sh)、[shellcheck](https://github.com/koalaman/shellcheck) 和 [shellspec](https://github.com/shellspec/shellspec)。
 
 ```console
-$ git clone https://github.com/ko1nksm/shdotenv.git
+$ git clone https://github.com/Aqr-K/shdotenv.git
 $ cd shdotenv
 $ make all MINIFY=true
 $ make install PREFIX=$HOME
@@ -179,7 +179,7 @@ shdotenv [选项]... export [选项]... [名称]...
 
 `docker` 命令有 `--env-file` 选项，但它只支持设置不含换行符的简单值。
 
--   [docker cannot pass newlines from variables in --env-file files](https://github.com/moby/moby/issues/12997)
+- [docker cannot pass newlines from variables in --env-file files](https://github.com/moby/moby/issues/12997)
 
 shdotenv 为此问题提供了一个简单的解决方案。
 
@@ -201,7 +201,7 @@ DOUBLE_QUOTED="value 3" # 一些特殊字符需要转义
 MULTILINE="line1
 line2: \n is not a newline
 line3"
-LONGLINE="https://github.com/ko1nksm\
+LONGLINE="https://github.com/Aqr-K\
 /shdotenv/blob/main/README.md"
 
 ENDPOINT="http://${HOST}/api" # 变量展开需要花括号
@@ -210,23 +210,23 @@ export EXPORT1="value"
 export EXPORT2 # 等同于：export EXPORT2="${EXPORT2:-}"
 ```
 
--   语法是 POSIX shell 的一个子集
--   第一行是可选的指示指令，用于指定 .env 语法的编程语言
--   分隔名称和值的 `=` 前后不允许有空格
--   不支持 ANSI-C 风格的转义（即 `\n` 不是换行符）
--   **无引号值**
-    -   可以使用的特殊字符是 `#` `%` `+` `,` `-` `.` `/` `:` `=` `@` `^` `_`
-    -   无引号值的首字符不允许是 `=` (0.14.0 版本新增)
--   **单引号值**
-    -   不允许的字符是：`'`
-    -   它可以包含换行符
--   **双引号值**
-    -   支持变量展开（仅支持 `${VAR}` 样式）
-    -   以下值应使用反斜杠 (`\`) 转义：`$` <code>\`</code> `"` `\`
-    -   行尾的 `\` 表示行连接
-    -   它可以包含换行符
--   名称前可以添加可选的 `export` 前缀
--   行尾注释的 `#` 前需要有空格
+- 语法是 POSIX shell 的一个子集
+- 第一行是可选的指示指令，用于指定 .env 语法的编程语言
+- 分隔名称和值的 `=` 前后不允许有空格
+- 不支持 ANSI-C 风格的转义（即 `\n` 不是换行符）
+- **无引号值**
+  - 可以使用的特殊字符是 `#` `%` `+` `,` `-` `.` `/` `:` `=` `@` `^` `_`
+  - 无引号值的首字符不允许是 `=` (0.14.0 版本新增)
+- **单引号值**
+  - 不允许的字符是：`'`
+  - 它可以包含换行符
+- **双引号值**
+  - 支持变量展开（仅支持 `${VAR}` 样式）
+  - 以下值应使用反斜杠 (`\`) 转义：`$` <code>\`</code> `"` `\`
+  - 行尾的 `\` 表示行连接
+  - 它可以包含换行符
+- 名称前可以添加可选的 `export` 前缀
+- 行尾注释的 `#` 前需要有空格
 
 详细的 [POSIX 兼容 .env 语法规范](docs/specification.md)
 
@@ -248,13 +248,13 @@ export EXPORT2 # 等同于：export EXPORT2="${EXPORT2:-}"
 
 本项目的正式 `.env` 语法仅为 `posix`。`posix` 是 POSIX shell 的一个子集，并与 shell 脚本兼容。支持其他 .env 语法编程语言是为了互操作性。兼容性将逐步提高，但并非完全兼容。欢迎报告问题。
 
--   docker: [docker](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file)
--   ruby: [dotenv](https://github.com/bkeepers/dotenv)
--   node: [dotenv](https://github.com/motdotla/dotenv) + [dotenv-expand](https://github.com/motdotla/dotenv-expand)
--   python: [python-dotenv](https://github.com/theskumar/python-dotenv)
--   php: [phpdotenv](https://github.com/vlucas/phpdotenv)
--   go: [godotenv](https://github.com/joho/godotenv)
--   rust: [dotenv](https://github.com/dotenv-rs/dotenv)
+- docker: [docker](https://docs.docker.com/engine/reference/commandline/run/#set-environment-variables--e---env---env-file)
+- ruby: [dotenv](https://github.com/bkeepers/dotenv)
+- node: [dotenv](https://github.com/motdotla/dotenv) + [dotenv-expand](https://github.com/motdotla/dotenv-expand)
+- python: [python-dotenv](https://github.com/theskumar/python-dotenv)
+- php: [phpdotenv](https://github.com/vlucas/phpdotenv)
+- go: [godotenv](https://github.com/joho/godotenv)
+- rust: [dotenv](https://github.com/dotenv-rs/dotenv)
 
 [比较编程语言](docs/dialects.md)
 
@@ -274,10 +274,10 @@ dialect: ruby
 
 ## 环境变量
 
-| 名称               | 描述                             | 默认值 |
-| ------------------ | --------------------------------------- | ------- |
-| SHDOTENV_FORMAT    | 输出格式 (`sh`, `fish` 等)      | `sh`    |
-| SHDOTENV_AWK       | `awk` 命令的路径               | `awk`   |
+| 名称            | 描述                       | 默认值 |
+| --------------- | -------------------------- | ------ |
+| SHDOTENV_FORMAT | 输出格式 (`sh`, `fish` 等) | `sh`   |
+| SHDOTENV_AWK    | `awk` 命令的路径           | `awk`  |
 
 ## 常见问题解答 (FAQ)
 

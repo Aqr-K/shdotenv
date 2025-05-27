@@ -4,7 +4,7 @@
 
 dotenv for shells with support for POSIX-compliant and multiple .env file syntax
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/ko1nksm/shdotenv/ubuntu.yml?branch=main&logo=github)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Aqr-K/shdotenv/ubuntu.yml?branch=main&logo=github)
 
 **Project Status**: Almost complete. Major features have been implemented and v1.0.0 will be released in the near future.
 
@@ -36,11 +36,11 @@ shdotenv safely loads the syntax of .env files that are compatible with POSIX sh
 
 ## Install
 
-Download `shdotenv` (shell script) from [releases](https://github.com/ko1nksm/shdotenv/releases).
+Download `shdotenv` (shell script) from [releases](https://github.com/Aqr-K/shdotenv/releases).
 
 ```console
 $ mkdir -p "$HOME/bin"
-$ wget https://github.com/ko1nksm/shdotenv/releases/latest/download/shdotenv -O "$HOME/bin/shdotenv"
+$ wget https://github.com/Aqr-K/shdotenv/releases/latest/download/shdotenv -O "$HOME/bin/shdotenv"
 $ chmod +x "$HOME/bin/shdotenv"
 ```
 
@@ -48,7 +48,7 @@ If you prefer the XDG Base Directory Specification, you can install it under the
 
 ```console
 $ mkdir -p "$HOME/.local/bin"
-$ wget https://github.com/ko1nksm/shdotenv/releases/latest/download/shdotenv -O "$HOME/.local/bin/shdotenv"
+$ wget https://github.com/Aqr-K/shdotenv/releases/latest/download/shdotenv -O "$HOME/.local/bin/shdotenv"
 $ chmod +x "$HOME/.local/bin/shdotenv"
 ```
 
@@ -59,7 +59,7 @@ Do not forget to add the installed directory to the `PATH` environment variable.
 **Build and install only**
 
 ```console
-$ git clone https://github.com/ko1nksm/shdotenv.git
+$ git clone https://github.com/Aqr-K/shdotenv.git
 $ cd shdotenv
 $ make
 $ make install PREFIX=$HOME
@@ -70,7 +70,7 @@ $ make install PREFIX=$HOME
 A full build requires requires [shfmt](https://github.com/mvdan/sh), [shellcheck](https://github.com/koalaman/shellcheck) and [shellspec](https://github.com/shellspec/shellspec).
 
 ```console
-$ git clone https://github.com/ko1nksm/shdotenv.git
+$ git clone https://github.com/Aqr-K/shdotenv.git
 $ cd shdotenv
 $ make all MINIFY=true
 $ make install PREFIX=$HOME
@@ -201,7 +201,7 @@ DOUBLE_QUOTED="value 3" # Some special characters need to be escaped
 MULTILINE="line1
 line2: \n is not a newline
 line3"
-LONGLINE="https://github.com/ko1nksm\
+LONGLINE="https://github.com/Aqr-K\
 /shdotenv/blob/main/README.md"
 
 ENDPOINT="http://${HOST}/api" # Variable expansion requires braces
