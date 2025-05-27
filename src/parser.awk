@@ -39,6 +39,12 @@ function unquote(str, quote) {
   syntax_error("unterminated quoted string")
 }
 
+function expand_env(key) {
+  if (key in environ) return environ[key]
+  if (!NOUNSET) return ""
+  abort(sprintf("%s: the key is not set", key))
+}
+
 function expand_value(str, quote,  variable, new_val, esc_chars_for_dialect, pos, len) {
   ESCAPED_CHARACTER = "\\\\."
   META_CHARACTER_DQ = "[$`\"\\\\]"
