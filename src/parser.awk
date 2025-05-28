@@ -45,6 +45,95 @@ function expand_env(key) {
   abort(sprintf("%s: the key is not set", key))
 }
 
+function parse_key(key) {
+  if (dialect("ruby|node|python|php|go")) {
+    key = trim(key)
+  }
+  if (match(key, "(^[ \t]+|[ \t]+$)")) {
+    abort(sprintf("`%s': no space allowed after the key", key))
+  }
+  if (!match(key, "^(export[ \t]+)?" IDENTIFIER "$")) {
+    abort(sprintf("`%s': the key is not a valid identifier", key))
+  }
+  return key
+}
+
+function parse_key_only(str) {
+  if (!sub("^export[ \t]+", "", str)) {
+    syntax_error("not a variable definition")
+  }
+  sub("[ \t]#.*", "", str)
+  if (!match(str, "^(" IDENTIFIER "[ \t]*)+$")) {
+    abort(sprintf("`%s': the key is not a valid identifier", str))
+  }
+  return str
+}
+
+function parse_raw_value(str) {
+  return str
+}
+
+function parse_unquoted_value(str) {
+  if (dialect("posix")) {
+    if (match(str, "[ \t]")) {
+      syntax_error("spaces are not allowed without quoting")
+    }
+
+    if (match(str, "[][{}()<>\"'`!$&~|;\\\\*?]")) {
+      syntax_error("using without quotes is not allowed: !$&()*;<>?[\\]`{|}~")
+    }
+
+    if (match(str, /^=.*/)) {
+      syntax_error("unquoted '=' not allowed for first character")
+    }
+  } else {
+    str = trim(str)
+  }
+
+  return expand_value(str, NO_QUOTES)
+}
+
+function parse_single_quoted_value(str) {
+  if (dialect("python")) {
+    new_s = ""
+    i = 1
+    while (i <= length(str)) {
+      char = substr(str, i, 1)
+      if (char == "\\") {
+        if (i + 1 <= length(str)) {
+          next_char = substr(str, i + 1, 1)
+          if (next_char == "'" || next_char == "\\") {
+            new_s = new_s next_char
+            i++
+          } else {
+            new_s = new_s char next_char
+            i++
+          }
+        } else {
+          new_s = new_s char
+        }
+      } else if (char == "'") {
+        syntax_error("unescaped single quote found in Python single-quoted value")
+      } else {
+        new_s = new_s char
+      }
+      i++
+    }
+    return new_s
+  } else if (dialect("ruby|php|node|go")) {
+    return str
+  } else {
+    if (index(str, "'")) {
+      syntax_error("single quotes cannot be used in the value of a single-quoted string for this dialect")
+    }
+    return str
+  }
+}
+
+function parse_double_quoted_value(str) {
+  return expand_value(str, DOUBLE_QUOTES)
+}
+
 function expand_value(str, quote,  variable, new_val, esc_chars_for_dialect, pos, len) {
   ESCAPED_CHARACTER = "\\\\."
   META_CHARACTER_DQ = "[$`\"\\\\]"
@@ -131,95 +220,6 @@ function expand_value(str, quote,  variable, new_val, esc_chars_for_dialect, pos
     str = substr(str, pos + len)
   }
   return new_val str
-}
-
-function se_key(key) {
-  if (dialect("ruby|node|python|php|go")) {
-    key = trim(key)
-  }
-  if (match(key, "(^[ \t]+|[ \t]+$)")) {
-    abort(sprintf("`%s': no space allowed after the key", key))
-  }
-  if (!match(key, "^(export[ \t]+)?" IDENTIFIER "$")) {
-    abort(sprintf("`%s': the key is not a valid identifier", key))
-  }
-  return key
-}
-
-function se_key_only(str) {
-  if (!sub("^export[ \t]+", "", str)) {
-    syntax_error("not a variable definition")
-  }
-  sub("[ \t]#.*", "", str)
-  if (!match(str, "^(" IDENTIFIER "[ \t]*)+$")) {
-    abort(sprintf("`%s': the key is not a valid identifier", str))
-  }
-  return str
-}
-
-function se_raw_value(str) {
-  return str
-}
-
-function parse_unquoted_value(str) {
-  if (dialect("posix")) {
-    if (match(str, "[ \t]")) {
-      syntax_error("spaces are not allowed without quoting")
-    }
-
-    if (match(str, "[][{}()<>\"'`!$&~|;\\\\*?]")) {
-      syntax_error("using without quotes is not allowed: !$&()*;<>?[\\]`{|}~")
-    }
-
-    if (match(str, /^=.*/)) {
-      syntax_error("unquoted '=' not allowed for first character")
-    }
-  } else {
-    str = trim(str)
-  }
-
-  return expand_value(str, NO_QUOTES)
-}
-
-function parse_single_quoted_value(str) {
-  if (dialect("python")) {
-    new_s = ""
-    i = 1
-    while (i <= length(str)) {
-      char = substr(str, i, 1)
-      if (char == "\\") {
-        if (i + 1 <= length(str)) {
-          next_char = substr(str, i + 1, 1)
-          if (next_char == "'" || next_char == "\\") {
-            new_s = new_s next_char
-            i++
-          } else {
-            new_s = new_s char next_char
-            i++
-          }
-        } else {
-          new_s = new_s char
-        }
-      } else if (char == "'") {
-        syntax_error("unescaped single quote found in Python single-quoted value")
-      } else {
-        new_s = new_s char
-      }
-      i++
-    }
-    return new_s
-  } else if (dialect("ruby|php|node|go")) {
-    return str
-  } else {
-    if (index(str, "'")) {
-      syntax_error("single quotes cannot be used in the value of a single-quoted string for this dialect")
-    }
-    return str
-  }
-}
-
-function parse_double_quoted_value(str) {
-  return expand_value(str, DOUBLE_QUOTES)
 }
 
 function remove_optional_comment(full_value_after_equals, value_len_before_comment, is_unquoted,  comment_candidate, actual_value_part) {
@@ -367,8 +367,8 @@ function process_main(export, key, value) {
 }
 
 function process_finish() {
-  len = split(trim(defined_keys), keys, " ")
-  if (SORT) asort(keys)
+  len = split(trim(defined_keys), keys)
+  if (SORT) sort(keys)
   for(i = 1; i <= len; i++) {
     key = keys[i]
     if (!match(key, GREP)) continue
@@ -401,9 +401,9 @@ function parse(lines) {
     lines = substr(lines, RSTART + RLENGTH)
     equal_pos = index(line, "=")
     if (equal_pos == 0) {
-      key = se_key_only(line)
+      key = parse_key_only(line)
     } else {
-      key = se_key(substr(line, 1, equal_pos - 1))
+      key = parse_key(substr(line, 1, equal_pos - 1))
     }
 
     if (NAMEONLY) {
@@ -427,7 +427,7 @@ function parse(lines) {
       processed_value = "" 
 
       if (dialect("docker")) {
-        processed_value = se_raw_value(value_after_equals)
+        processed_value = parse_raw_value(value_after_equals)
       } else if (match(value_after_equals, "^"SQ_VALUE)) { 
         processed_value = remove_optional_comment(value_after_equals, RLENGTH, 0) 
         processed_value = parse_single_quoted_value(unquote(processed_value, "'"))
